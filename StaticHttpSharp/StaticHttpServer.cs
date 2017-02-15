@@ -178,7 +178,7 @@ namespace StaticHttpSharp
         private Thread thread;
 
         public string Root { get; private set; }
-        public bool AllowParentDirectory { get; set; } = false;
+        public bool AllowParentDirectory { get; set; }
 
         public StaticHttpServer(string root_path, int port) : base(port)
         {
@@ -196,7 +196,8 @@ namespace StaticHttpSharp
                     p.writeFailure();
                     return;
                 }
-                using (fs = File.Open(this.Root + HttpUtility.UrlDecode(p.http_url), FileMode.Open))
+
+                using (fs = new System.IO.FileStream(this.Root + HttpUtility.UrlDecode(p.http_url), System.IO.FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite))
                 {
                     //p.writeSuccess();
                     fs.CopyTo(p.outputStream.BaseStream);
